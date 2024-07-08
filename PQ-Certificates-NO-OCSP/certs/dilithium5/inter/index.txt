@@ -1,0 +1,3 @@
+V	240506181556Z		01	unknown	/C=US/ST=Maryland/L=Baltimore/O=Internet Widgits Pty Ltd/OU=Server Research Department/CN=OCSP/emailAddress=test@example.com
+V	240506181556Z		02	unknown	/C=US/ST=Maryland/L=Baltimore/O=Internet Widgits Pty Ltd/OU=Server Research Department/CN=Server/emailAddress=test@example.com
+V	240506181556Z		03	unknown	/C=US/ST=Maryland/L=Baltimore/O=Internet Widgits Pty Ltd/OU=Server Research Department/CN=User/emailAddress=test@example.com
