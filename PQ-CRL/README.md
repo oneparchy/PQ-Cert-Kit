@@ -2,9 +2,9 @@
 RSA
 ----
 
-Go to Desktop/PQ-CRL/openssl/apps
+-Go to /openssl/apps
 
-Then run 
+-run 
 
 ./openssl genrsa -out /home/yacoub/Desktop/PQ-CRL/tls/private/cakey.pem 4096
 
