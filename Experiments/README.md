@@ -1,5 +1,5 @@
 <div align="center">
-	<img src="Pictures/Approach.png" alt="Approach" width="400" height="auto">
+	<img src="[Pictures/Approach.png](https://github.com/adwise-fiu/PQ-Cryptography-With-Certificate-Validation-Methods/blob/main/Pictures/Approach.png)" alt="Approach" width="400" height="auto">
 </div>
 
 
