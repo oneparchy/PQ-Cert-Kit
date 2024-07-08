@@ -1,5 +1,7 @@
 ----
-Follow the setps below to generate the certificates or use CRL file to run CRL experiments
+Follow the setps below to generate the certificates and use opensslCRL.cnf
+OR 
+Use CRL file to run CRL experiments
 ----
 
 

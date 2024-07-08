@@ -1,13 +1,13 @@
-Go to
+- Go to
  
-pqcerts-main/openssl/apps
+Path-to-Dirctory/openssl/apps
 
+- Run the server on the Laptop
 
-Run the server 
-sudo ./openssl s_server -accept 443 -tls1_3 -cert /home/yacoub/Desktop/PQ-certificates-no-OCSP/pqcerts-main/certs/rsa/svrcert.pem -key /home/yacoub/Desktop/PQ-certificates-no-OCSP/pqcerts-main/certs/rsa/svrkey.pem -CAfile /home/yacoub/Desktop/PQ-certificates-no-OCSP/pqcerts-main/certs/rsa/inter/cacert.pem  -status_verbose
+sudo ./openssl s_server -accept 443 -tls1_3 -cert /Path-to-Dirctory/PQ-No-Cert-Validation/certs/falcon512/svrcert.pem -key /Path-to-Dirctory/PQ-No-Cert-Validation/certs/falcon512/svrkey.pem -CAfile /Path-to-Dirctory/PQ-No-Cert-Validation/certs/falcon512/inter/cacert.pem  -status_verbose
 
-Then run the client 
+- Run the client on the RPI
 
-./openssl s_client -connect 127.0.0.1:443 -tls1_3 -CAfile /home/yacoub/Desktop/PQ-certificates-no-OCSP/pqcerts-main/certs/rsa/root/cacert.pem -status
+./openssl s_client -connect IP_ADDRESS:443 -tls1_3 -CAfile /Path-to-Dirctory/PQ-No-Cert-Validation/certs/falcon512/root/cacert.pem -status
 
-to run with Kyber or another key exchange add -groups <kex> to the client side 
+- To run with Kyber or another PQ KEM add -groups <kex> to the client side 

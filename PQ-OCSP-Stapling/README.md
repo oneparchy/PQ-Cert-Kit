@@ -1,16 +1,23 @@
-Go to pqcerts-main/certs/rsa
+- Go to PQ-OCSP-Stapling/certs/falcon512
 
-then run the OCSP server
-/home/yacoub/Desktop/PQ-all-certificates/pqcerts-main/openssl/apps/openssl ocsp -index   /home/yacoub/Desktop/PQ-all-certificates/pqcerts-main/certs/rsa/inter/index.txt -port 8080 -rsigner ocspcert.pem -rkey ocspkey.pem -CA /home/yacoub/Desktop/PQ-all-certificates/pqcerts-main/certs/rsa/inter/cacert.pem
+- Run the OCSP server (OCSP responder can be run locally with the server or on the cloud)
 
-
-Then go to pqcerts-main/openssl/apps
-
-Then run the server
-sudo ./openssl s_server -accept 443 -tls1_3 -cert /home/yacoub/Desktop/PQ-all-certificates/pqcerts-main/certs/rsa/svrcert.pem -key /home/yacoub/Desktop/PQ-all-certificates/pqcerts-main/certs/rsa/svrkey.pem -CAfile /home/yacoub/Desktop/PQ-all-certificates/pqcerts-main/certs/rsa/inter/cacert.pem  -status_verbose
+/Path-to-Dirctory/openssl/apps/openssl ocsp -index  /Path-to-Dirctory/PQ-OCSP-Stapling/certs/falcon512/inter/index.txt -port 8080 -rsigner ocspcert.pem -rkey ocspkey.pem -CA /Path-to-Dirctory/PQ-OCSP-Stapling/certs/falcon512/inter/cacert.pem
 
 
-Then go run the client 
-./openssl s_client -groups kyber512 -connect 127.0.2.1:443 -tls1_3 -CAfile /home/yacoub/Desktop/PQ-all-certificates/pqcerts-main/certs/rsa/root/cacert.pem -status 
+- Go to Path-to-Dirctory/openssl/apps
 
-add -groups <kex> for PQ key exchange
+- Run the server on the laptop
+
+sudo ./openssl s_server -accept 443 -tls1_3 -cert /Path-to-Dirctory/PQ-OCSP-Stapling/certs/falcon512/svrcert.pem -key /Path-to-Dirctory/PQ-OCSP-Stapling/certs/falcon512/svrkey.pem -CAfile /Path-to-Dirctory/PQ-OCSP-Stapling/certs/falcon512/inter/cacert.pem  -status_verbose
+
+
+- Run the client on the RPI
+
+- Go to Path-to-Dirctory/openssl/apps
+
+./openssl s_client -connect IP_ADDRESS:443 -tls1_3 -CAfile /Path-to-Dirctory/PQ-OCSP-Stapling/certs/falcon512/root/cacert.pem -status 
+
+add -groups <kex> for PQ KEM
+
+- Example: ./openssl s_client -groups kyber512 -connect IP_ADDRESS:443 -tls1_3 -CAfile /Path-to-Dirctory/PQ-OCSP-Stapling/certs/falcon512/root/cacert.pem -status 
