@@ -1,7 +1,8 @@
 
 
 <div align="center">
-	<img src="PQ-Certs.png" alt="Trust chain overview" width="400" height="auto"> 
+	<img src="Pictures/PQ-Certs.png" alt="Trust chain overview" width="400" height="auto"> 
+	<img src="Pictures/Approach.png" alt="Trust chain overview" width="400" height="auto">
 </div>
 
 
