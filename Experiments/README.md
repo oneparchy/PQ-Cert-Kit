@@ -8,3 +8,5 @@
 Clone this repository on the laptop and RPI
 ----
 - git clone https://github.com/adwise-fiu/PQ-Cryptography-With-Certificate-Validation-Methods/tree/main
+
+- Follow the README file of each experiment
