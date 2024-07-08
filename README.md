@@ -1,4 +1,8 @@
-<img src="PQ-Certs.png" alt="Trust chain overview" width="400" height="auto" align="center"> 
+
+
+<div align="center">
+	<img src="PQ-Certs.png" alt="Trust chain overview" width="400" height="auto"> 
+</div>
 
 
 ## Overview
