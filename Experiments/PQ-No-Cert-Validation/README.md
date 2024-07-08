@@ -1,6 +1,4 @@
-- Go to
- 
-Path-to-Dirctory/openssl/apps
+- Go to Path-to-Dirctory/openssl/apps
 
 - Run the server on the Laptop
 
