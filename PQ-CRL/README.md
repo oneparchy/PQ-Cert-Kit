@@ -1,30 +1,37 @@
 ----
+Follow the setps below to generate the certificates or use CRL file to run CRL experiments
+----
+
+
+
+
+----
 RSA
 ----
 
--Go to /openssl/apps
+-Go to /Path-to-Dirctory/openssl/apps
 
 -run 
 
-./openssl genrsa -out /home/yacoub/Desktop/PQ-CRL/tls/private/cakey.pem 4096
+./openssl genrsa -out /Path-to-Dirctory/PQ-CRL/CRL/private/cakey.pem 4096
 
-./openssl req -new -x509 -days 3650 -config openssl.cnf -key /home/yacoub/Desktop/PQ-CRL/tls/private/cakey.pem -out /home/yacoub/Desktop/PQ-CRL/tls/certs/cacert.pem
+./openssl req -new -x509 -days 3650 -config openssl.cnf -key /Path-to-Dirctory/PQ-CRL/CRL/private/cakey.pem -out /Path-to-Dirctory/PQ-CRL/CRL/certs/cacert.pem
 
-./openssl x509 -noout -text -in /home/yacoub/Desktop/PQ-CRL/tls/certs/cacert.pem
+./openssl x509 -noout -text -in /Path-to-Dirctory/PQ-CRL/CRL/certs/cacert.pem
 
 
 
-Then you go to Desktop/PQ-CRL/tls/certs
+-Then you go to Path-to-Dirctory/PQ-CRL/CRL/certs
 
-Then run 
+-run 
 
-/home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl genrsa -out server.key.pem 4096
+/Path-to-Dirctory/openssl/apps/openssl genrsa -out server.key.pem 4096
 
-/home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl req -new -key server.key.pem -out server-1.csr -config /home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl.cnf
+/Path-to-Dirctory/openssl/apps/openssl req -new -key server.key.pem -out server-1.csr -config /Path-to-Dirctory/openssl/apps/openssl.cnf
 
 gedit ext_template.cnf
 
-and paste this 
+-add this to the file 
 
 basicConstraints = CA:FALSE
 nsCertType = client, email
@@ -35,82 +42,81 @@ keyUsage = critical, nonRepudiation, digitalSignature, keyEncipherment
 extendedKeyUsage = clientAuth, serverAuth
 
 
-/home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl ca -config /home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl.cnf -notext -batch -in server-1.csr -out server-1.crt -extfile ext_template.cnf
+/Path-to-Dirctory/openssl/apps/openssl ca -config /Path-to-Dirctory/openssl/apps/openssl.cnf -notext -batch -in server-1.csr -out server-1.crt -extfile ext_template.cnf
 
 
 ------
 ECDSA
 ------
 
-Go to Desktop/PQ-CRL/openssl/apps
+- Go to Path-to-Dirctory/openssl/apps
 
-Then run 
+- run 
 
-./openssl ecparam -name prime256v1 -genkey -out /home/yacoub/Desktop/PQ-CRL/tls/private/ecdsacakey.pem
+./openssl ecparam -name prime256v1 -genkey -out /Path-to-Dirctory/PQ-CRL/CRL/private/ecdsacakey.pem
 
-./openssl req -x509 -days 3650 -config openssl.cnf -key /home/yacoub/Desktop/PQ-CRL/tls/private/ecdsacakey.pem -out /home/yacoub/Desktop/PQ-CRL/tls/certs/ecdsacacert.pem -sha256 -batch
-
-
-./openssl x509 -noout -text -in /home/yacoub/Desktop/PQ-CRL/tls/certs/ecdsacacert.pem
+./openssl req -x509 -days 3650 -config openssl.cnf -key /Path-to-Dirctory/PQ-CRL/CRL/private/ecdsacakey.pem -out /Path-to-Dirctory/PQ-CRL/CRL/certs/ecdsacacert.pem -sha256 -batch
 
 
-Then you go to Desktop/PQ-CRL/tls/certs
+./openssl x509 -noout -text -in /Path-to-Dirctory/PQ-CRL/CRL/certs/ecdsacacert.pem
 
-Then run 
 
-/home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl ecparam -name prime256v1 -genkey -out ecdsasvrkey.pem
+- Go to Path-to-Dirctory/PQ-CRL/CRL/certs
 
-/home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl req -new -key ecdsasvrkey.pem -out ecdsaserver-1.csr -config /home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl.cnf -sha256 -batch
+- run 
 
-/home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl ca -config /home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl.cnf -notext -batch -in ecdsaserver-1.csr -out ecdsaserver-1.crt -extfile ext_template.cnf
+/Path-to-Dirctory/openssl/apps/openssl ecparam -name prime256v1 -genkey -out ecdsasvrkey.pem
+
+/Path-to-Dirctory/openssl/apps/openssl req -new -key ecdsasvrkey.pem -out ecdsaserver-1.csr -config /Path-to-Dirctory/openssl/apps/openssl.cnf -sha256 -batch
+
+/Path-to-Dirctory/openssl/apps/openssl ca -config /Path-to-Dirctory/openssl/apps/openssl.cnf -notext -batch -in ecdsaserver-1.csr -out ecdsaserver-1.crt -extfile ext_template.cnf
 
 
 ------
 EDDSA
 ------
 
-Go to Desktop/PQ-CRL/openssl/apps
+- Go to Path-to-Dirctory/openssl/apps
 
-Then run 
+- un 
 
-./openssl genpkey -algorithm ED25519 -out /home/yacoub/Desktop/PQ-CRL/tls/private/eddsacakey.pem
+./openssl genpkey -algorithm ED25519 -out /Path-to-Dirctory/PQ-CRL/CRL/private/eddsacakey.pem
 
-./openssl req -x509 -config openssl.cnf -key /home/yacoub/Desktop/PQ-CRL/tls/private/eddsacakey.pem  -sha256 -out /home/yacoub/Desktop/PQ-CRL/tls/certs/eddsacacert.pem -days 3650 -batch
+./openssl req -x509 -config openssl.cnf -key /Path-to-Dirctory/PQ-CRL/CRL/private/eddsacakey.pem  -sha256 -out /Path-to-Dirctory/PQ-CRL/CRL/certs/eddsacacert.pem -days 3650 -batch
 
-./openssl x509 -noout -text -in /home/yacoub/Desktop/PQ-CRL/tls/certs/eddsacacert.pem
+./openssl x509 -noout -text -in /Path-to-Dirctory/PQ-CRL/CRL/certs/eddsacacert.pem
 
 
-Then you go to Desktop/PQ-CRL/tls/certs
+- Go to Path-to-Dirctory/PQ-CRL/CRL/certs
 
-Then run 
+- run 
 
-/home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl genpkey -algorithm ED25519 -out eddsasvrkey.pem
+/Path-to-Dirctory/openssl/apps/openssl genpkey -algorithm ED25519 -out eddsasvrkey.pem
 
-/home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl req -new -key eddsasvrkey.pem -out eddsaserver-1.csr -config /home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl.cnf -sha256 -batch
+/Path-to-Dirctory/openssl/apps/openssl req -new -key eddsasvrkey.pem -out eddsaserver-1.csr -config /Path-to-Dirctory/openssl/apps/openssl.cnf -sha256 -batch
 
-/home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl ca -config /home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl.cnf -notext -batch -in eddsaserver-1.csr -out eddsaserver-1.crt -extfile ext_template.cnf
+/Path-to-Dirctory/openssl/apps/openssl ca -config /Path-to-Dirctory/openssl/apps/openssl.cnf -notext -batch -in eddsaserver-1.csr -out eddsaserver-1.crt -extfile ext_template.cnf
 
 
 ---------
 Falcon512 
 ---------
 
-Go to Desktop/PQ-CRL/openssl/apps
+- Go to Path-to-Dirctory/openssl/apps
 
-Then run 
+- run 
 
-./openssl req -x509 -config openssl.cnf -newkey falcon512 -sha256  -out /home/yacoub/Desktop/PQ-CRL/tls/certs/falcon512cacert.pem  -keyout /home/yacoub/Desktop/PQ-CRL/tls/private/falcon512cakey.pem  -days 3650 -batch
+./openssl req -x509 -config openssl.cnf -newkey falcon512 -sha256  -out /Path-to-Dirctory/PQ-CRL/CRL/certs/falcon512cacert.pem  -keyout /Path-to-Dirctory/PQ-CRL/CRL/private/falcon512cakey.pem  -days 3650 -batch
 
-./openssl x509 -noout -text -in /home/yacoub/Desktop/PQ-CRL/tls/certs/falcon512cacert.pem
+./openssl x509 -noout -text -in /Path-to-Dirctory/PQ-CRL/CRL/certs/falcon512cacert.pem
 
-Then you go to Desktop/PQ-CRL/tls/certs
+- Go to Path-to-Dirctory/PQ-CRL/CRL/certs
 
-Then run 
+- run 
 
-/home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl req -new -config /home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl.cnf -newkey falcon512 -sha256  -out falcon512svrcert.csr  -keyout falcon512svrkey.pem -batch
+/Path-to-Dirctory/openssl/apps/openssl req -new -config /Path-to-Dirctory/openssl/apps/openssl.cnf -newkey falcon512 -sha256  -out falcon512svrcert.csr  -keyout falcon512svrkey.pem -batch
 
-
-/home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl ca -config /home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl.cnf -notext -batch -in falcon512svrcert.csr -out falcon512server-1.crt -extfile ext_template.cnf
+/Path-to-Dirctory/openssl/apps/openssl ca -config /Path-to-Dirctory/openssl/apps/openssl.cnf -notext -batch -in falcon512svrcert.csr -out falcon512server-1.crt -extfile ext_template.cnf
 
 
 
@@ -118,23 +124,21 @@ Then run
 Falcon1024 
 ---------
 
-Go to Desktop/PQ-CRL/openssl/apps
+- Go to Path-to-Dirctory/openssl/apps
 
-Then run 
+- run 
 
-./openssl req -x509 -config openssl.cnf -newkey falcon1024 -sha256 -out /home/yacoub/Desktop/PQ-CRL/tls/certs/falcon1024cacert.pem  -keyout /home/yacoub/Desktop/PQ-CRL/tls/private/falcon1024cakey.pem  -days 3650 -batch
+./openssl req -x509 -config openssl.cnf -newkey falcon1024 -sha256 -out /Path-to-Dirctory/PQ-CRL/CRL/certs/falcon1024cacert.pem  -keyout /Path-to-Dirctory/PQ-CRL/CRL/private/falcon1024cakey.pem  -days 3650 -batch
 
-./openssl x509 -noout -text -in /home/yacoub/Desktop/PQ-CRL/tls/certs/falcon1024cacert.pem
+./openssl x509 -noout -text -in /Path-to-Dirctory/PQ-CRL/CRL/certs/falcon1024cacert.pem
 
+- Go to Path-to-Dirctory/PQ-CRL/CRL/certs
 
-Then you go to Desktop/PQ-CRL/tls/certs
+- run 
 
-Then run 
+/Path-to-Dirctory/openssl/apps/openssl req -new -config /Path-to-Dirctory/openssl/apps/openssl.cnf -newkey falcon1024 -sha256  -out falcon1024svrcert.csr  -keyout falcon1024svrkey.pem -batch
 
-
-/home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl req -new -config /home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl.cnf -newkey falcon1024 -sha256  -out falcon1024svrcert.csr  -keyout falcon1024svrkey.pem -batch
-
-/home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl ca -config /home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl.cnf -notext -batch -in falcon1024svrcert.csr -out falcon1024server-1.crt -extfile ext_template.cnf
+/Path-to-Dirctory/openssl/apps/openssl ca -config /Path-to-Dirctory/openssl/apps/openssl.cnf -notext -batch -in falcon1024svrcert.csr -out falcon1024server-1.crt -extfile ext_template.cnf
 
 
 
@@ -142,23 +146,23 @@ Then run
 Dilithium2 
 ---------
 
-Go to Desktop/PQ-CRL/openssl/apps
+- Go to Path-to-Dirctory/openssl/apps
 
-Then run 
+- run 
 
-./openssl req -x509 -config openssl.cnf -newkey dilithium2 -sha256 -out /home/yacoub/Desktop/PQ-CRL/tls/certs/dil2cacert.pem  -keyout /home/yacoub/Desktop/PQ-CRL/tls/private/dil2cakey.pem  -days 3650 -batch
+./openssl req -x509 -config openssl.cnf -newkey dilithium2 -sha256 -out /Path-to-Dirctory/PQ-CRL/CRL/certs/dil2cacert.pem  -keyout /Path-to-Dirctory/PQ-CRL/CRL/private/dil2cakey.pem  -days 3650 -batch
 
-./openssl x509 -noout -text -in /home/yacoub/Desktop/PQ-CRL/tls/certs/dil2cacert.pem
-
-
-Then you go to Desktop/PQ-CRL/tls/certs
-
-Then run 
+./openssl x509 -noout -text -in /Path-to-Dirctory/PQ-CRL/CRL/certs/dil2cacert.pem
 
 
-/home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl req -new -config /home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl.cnf -newkey dilithium2 -sha256  -out dil2svrcert.csr  -keyout dil2svrkey.pem -batch
+- Go to Path-to-Dirctory/PQ-CRL/CRL/certs
 
-/home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl ca -config /home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl.cnf -notext -batch -in dil2svrcert.csr -out dil2server-1.crt -extfile ext_template.cnf
+- run 
+
+
+/Path-to-Dirctory/openssl/apps/openssl req -new -config /Path-to-Dirctory/openssl/apps/openssl.cnf -newkey dilithium2 -sha256  -out dil2svrcert.csr  -keyout dil2svrkey.pem -batch
+
+/Path-to-Dirctory/openssl/apps/openssl ca -config /Path-to-Dirctory/openssl/apps/openssl.cnf -notext -batch -in dil2svrcert.csr -out dil2server-1.crt -extfile ext_template.cnf
 
 
 
@@ -167,23 +171,21 @@ Then run
 Dilithium3 
 ---------
 
-Go to Desktop/PQ-CRL/openssl/apps
+- Go to Path-to-Dirctory/openssl/apps
 
-Then run 
+- run 
 
-./openssl req -x509 -config openssl.cnf -newkey dilithium3 -sha256 -out /home/yacoub/Desktop/PQ-CRL/tls/certs/dil3cacert.pem  -keyout /home/yacoub/Desktop/PQ-CRL/tls/private/dil3cakey.pem  -days 3650 -batch
+./openssl req -x509 -config openssl.cnf -newkey dilithium3 -sha256 -out /Path-to-Dirctory/PQ-CRL/CRL/certs/dil3cacert.pem  -keyout /Path-to-Dirctory/PQ-CRL/CRL/private/dil3cakey.pem  -days 3650 -batch
 
-./openssl x509 -noout -text -in /home/yacoub/Desktop/PQ-CRL/tls/certs/dil3cacert.pem
+./openssl x509 -noout -text -in /Path-to-Dirctory/PQ-CRL/CRL/certs/dil3cacert.pem
 
+- Go to Path-to-Dirctory/PQ-CRL/CRL/certs
 
-Then you go to Desktop/PQ-CRL/tls/certs
+- run 
 
-Then run 
+/Path-to-Dirctory/openssl/apps/openssl req -new -config /Path-to-Dirctory/openssl/apps/openssl.cnf -newkey dilithium3 -sha256  -out dil3svrcert.csr  -keyout dil3svrkey.pem -batch
 
-
-/home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl req -new -config /home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl.cnf -newkey dilithium3 -sha256  -out dil3svrcert.csr  -keyout dil3svrkey.pem -batch
-
-/home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl ca -config /home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl.cnf -notext -batch -in dil3svrcert.csr -out dil3server-1.crt -extfile ext_template.cnf
+/Path-to-Dirctory/openssl/apps/openssl ca -config /Path-to-Dirctory/openssl/apps/openssl.cnf -notext -batch -in dil3svrcert.csr -out dil3server-1.crt -extfile ext_template.cnf
 
 
 
@@ -192,23 +194,21 @@ Then run
 Dilithium5 
 ---------
 
-Go to Desktop/PQ-CRL/openssl/apps
+- Go to Path-to-Dirctory/openssl/apps
 
-Then run 
+- run 
 
-./openssl req -x509 -config openssl.cnf -newkey dilithium5 -sha256 -out /home/yacoub/Desktop/PQ-CRL/tls/certs/dil5cacert.pem  -keyout /home/yacoub/Desktop/PQ-CRL/tls/private/dil5cakey.pem  -days 3650 -batch
+./openssl req -x509 -config openssl.cnf -newkey dilithium5 -sha256 -out /Path-to-Dirctory/PQ-CRL/CRL/certs/dil5cacert.pem  -keyout /Path-to-Dirctory/PQ-CRL/CRL/private/dil5cakey.pem  -days 3650 -batch
 
-./openssl x509 -noout -text -in /home/yacoub/Desktop/PQ-CRL/tls/certs/dil5cacert.pem
+./openssl x509 -noout -text -in /Path-to-Dirctory/PQ-CRL/CRL/certs/dil5cacert.pem
 
+- Go to Path-to-Dirctory/PQ-CRL/CRL/certs
 
-Then you go to Desktop/PQ-CRL/tls/certs
+- run 
 
-Then run 
+/Path-to-Dirctory/openssl/apps/openssl req -new -config /Path-to-Dirctory/openssl/apps/openssl.cnf -newkey dilithium5 -sha256  -out dil5svrcert.csr  -keyout dil5svrkey.pem -batch
 
-
-/home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl req -new -config /home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl.cnf -newkey dilithium5 -sha256  -out dil5svrcert.csr  -keyout dil5svrkey.pem -batch
-
-/home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl ca -config /home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl.cnf -notext -batch -in dil5svrcert.csr -out dil5server-1.crt -extfile ext_template.cnf
+/Path-to-Dirctory/openssl/apps/openssl ca -config /Path-to-Dirctory/openssl/apps/openssl.cnf -notext -batch -in dil5svrcert.csr -out dil5server-1.crt -extfile ext_template.cnf
 
 
 
@@ -217,23 +217,21 @@ Then run
 sphincsharaka128fsimple
 -----------------------
 
-Go to Desktop/PQ-CRL/openssl/apps
+- Go to Path-to-Dirctory/openssl/apps
 
-Then run 
+- run 
 
-./openssl req -x509 -config openssl.cnf -newkey sphincsharaka128fsimple -sha256 -out /home/yacoub/Desktop/PQ-CRL/tls/certs/sphincsharakacacert.pem  -keyout /home/yacoub/Desktop/PQ-CRL/tls/private/sphincsharakacakey.pem  -days 3650 -batch
+./openssl req -x509 -config openssl.cnf -newkey sphincsharaka128fsimple -sha256 -out /Path-to-Dirctory/PQ-CRL/CRL/certs/sphincsharakacacert.pem  -keyout /Path-to-Dirctory/PQ-CRL/CRL/private/sphincsharakacakey.pem  -days 3650 -batch
 
-./openssl x509 -noout -text -in /home/yacoub/Desktop/PQ-CRL/tls/certs/sphincsharakacacert.pem
+./openssl x509 -noout -text -in /Path-to-Dirctory/PQ-CRL/CRL/certs/sphincsharakacacert.pem
 
+- Go to Path-to-Dirctory/PQ-CRL/CRL/certs
 
-Then you go to Desktop/PQ-CRL/tls/certs
+- run 
 
-Then run 
+/Path-to-Dirctory/openssl/apps/openssl req -new -config /Path-to-Dirctory/openssl/apps/openssl.cnf -newkey sphincsharaka128fsimple -sha256  -out sphincsharakasvrcert.csr  -keyout sphincsharakasvrkey.pem -batch
 
-
-/home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl req -new -config /home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl.cnf -newkey sphincsharaka128fsimple -sha256  -out sphincsharakasvrcert.csr  -keyout sphincsharakasvrkey.pem -batch
-
-/home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl ca -config /home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl.cnf -notext -batch -in sphincsharakasvrcert.csr -out sphincsharakaserver-1.crt -extfile ext_template.cnf
+/Path-to-Dirctory/openssl/apps/openssl ca -config /Path-to-Dirctory/openssl/apps/openssl.cnf -notext -batch -in sphincsharakasvrcert.csr -out sphincsharakaserver-1.crt -extfile ext_template.cnf
 
 
 
@@ -244,23 +242,21 @@ Then run
 sphincssha256128ssimple
 -----------------------
 
-Go to Desktop/PQ-CRL/openssl/apps
+- Go to Path-to-Dirctory/openssl/apps
 
-Then run 
+- run 
 
-./openssl req -x509 -config openssl.cnf -newkey sphincssha256128ssimple -sha256 -out /home/yacoub/Desktop/PQ-CRL/tls/certs/sphincshacacert.pem  -keyout /home/yacoub/Desktop/PQ-CRL/tls/private/sphincshacakey.pem  -days 3650 -batch
+./openssl req -x509 -config openssl.cnf -newkey sphincssha256128ssimple -sha256 -out /Path-to-Dirctory/PQ-CRL/CRL/certs/sphincshacacert.pem  -keyout /Path-to-Dirctory/PQ-CRL/CRL/private/sphincshacakey.pem  -days 3650 -batch
 
-./openssl x509 -noout -text -in /home/yacoub/Desktop/PQ-CRL/tls/certs/sphincshacacert.pem
+./openssl x509 -noout -text -in /Path-to-Dirctory/PQ-CRL/CRL/certs/sphincshacacert.pem
 
+- Go to Path-to-Dirctory/PQ-CRL/CRL/certs
 
-Then you go to Desktop/PQ-CRL/tls/certs
+- run 
 
-Then run 
+/Path-to-Dirctory/openssl/apps/openssl req -new -config /Path-to-Dirctory/openssl/apps/openssl.cnf -newkey sphincssha256128ssimple -sha256  -out sphincshasvrcert.csr  -keyout sphincshasvrkey.pem -batch
 
-
-/home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl req -new -config /home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl.cnf -newkey sphincssha256128ssimple -sha256  -out sphincshasvrcert.csr  -keyout sphincshasvrkey.pem -batch
-
-/home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl ca -config /home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl.cnf -notext -batch -in sphincshasvrcert.csr -out sphincshaserver-1.crt -extfile ext_template.cnf
+/Path-to-Dirctory/openssl/apps/openssl ca -config /Path-to-Dirctory/openssl/apps/openssl.cnf -notext -batch -in sphincshasvrcert.csr -out sphincshaserver-1.crt -extfile ext_template.cnf
 
 
 
@@ -269,23 +265,21 @@ Then run
 sphincsshake256128fsimple
 -----------------------
 
-Go to Desktop/PQ-CRL/openssl/apps
+- Go to Path-to-Dirctory/openssl/apps
 
-Then run 
+- run 
 
-./openssl req -x509 -config openssl.cnf -newkey sphincsshake256128fsimple -sha256 -out /home/yacoub/Desktop/PQ-CRL/tls/certs/sphincshakecacert.pem  -keyout /home/yacoub/Desktop/PQ-CRL/tls/private/sphincshakecakey.pem  -days 3650 -batch
+./openssl req -x509 -config openssl.cnf -newkey sphincsshake256128fsimple -sha256 -out /Path-to-Dirctory/PQ-CRL/CRL/certs/sphincshakecacert.pem  -keyout /Path-to-Dirctory/PQ-CRL/CRL/private/sphincshakecakey.pem  -days 3650 -batch
 
-./openssl x509 -noout -text -in /home/yacoub/Desktop/PQ-CRL/tls/certs/sphincshakecacert.pem
+./openssl x509 -noout -text -in /Path-to-Dirctory/PQ-CRL/CRL/certs/sphincshakecacert.pem
 
+- Go to Path-to-Dirctory/PQ-CRL/CRL/certs
 
-Then you go to Desktop/PQ-CRL/tls/certs
+- run 
 
-Then run 
+/Path-to-Dirctory/openssl/apps/openssl req -new -config /Path-to-Dirctory/openssl/apps/openssl.cnf -newkey sphincsshake256128fsimple -sha256  -out sphincshakesvrcert.csr  -keyout sphincshakesvrkey.pem -batch
 
-
-/home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl req -new -config /home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl.cnf -newkey sphincsshake256128fsimple -sha256  -out sphincshakesvrcert.csr  -keyout sphincshakesvrkey.pem -batch
-
-/home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl ca -config /home/yacoub/Desktop/PQ-CRL/openssl/apps/openssl.cnf -notext -batch -in sphincshakesvrcert.csr -out sphincshakeserver-1.crt -extfile ext_template.cnf
+/Path-to-Dirctory/openssl/apps/openssl ca -config /Path-to-Dirctory/openssl/apps/openssl.cnf -notext -batch -in sphincshakesvrcert.csr -out sphincshakeserver-1.crt -extfile ext_template.cnf
 
 
 
