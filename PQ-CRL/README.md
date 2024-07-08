@@ -9,9 +9,9 @@ Follow the setps below to generate the certificates or use CRL file to run CRL e
 RSA
 ----
 
--Go to /Path-to-Dirctory/openssl/apps
+- Go to /Path-to-Dirctory/openssl/apps
 
--run 
+- run 
 
 ./openssl genrsa -out /Path-to-Dirctory/PQ-CRL/CRL/private/cakey.pem 4096
 
@@ -19,11 +19,9 @@ RSA
 
 ./openssl x509 -noout -text -in /Path-to-Dirctory/PQ-CRL/CRL/certs/cacert.pem
 
+- Go to Path-to-Dirctory/PQ-CRL/CRL/certs
 
-
--Then you go to Path-to-Dirctory/PQ-CRL/CRL/certs
-
--run 
+- run 
 
 /Path-to-Dirctory/openssl/apps/openssl genrsa -out server.key.pem 4096
 
@@ -31,7 +29,7 @@ RSA
 
 gedit ext_template.cnf
 
--add this to the file 
+- add this to the file 
 
 basicConstraints = CA:FALSE
 nsCertType = client, email
@@ -78,7 +76,7 @@ EDDSA
 
 - Go to Path-to-Dirctory/openssl/apps
 
-- un 
+- run 
 
 ./openssl genpkey -algorithm ED25519 -out /Path-to-Dirctory/PQ-CRL/CRL/private/eddsacakey.pem
 
@@ -110,6 +108,7 @@ Falcon512
 
 ./openssl x509 -noout -text -in /Path-to-Dirctory/PQ-CRL/CRL/certs/falcon512cacert.pem
 
+
 - Go to Path-to-Dirctory/PQ-CRL/CRL/certs
 
 - run 
@@ -131,6 +130,7 @@ Falcon1024
 ./openssl req -x509 -config openssl.cnf -newkey falcon1024 -sha256 -out /Path-to-Dirctory/PQ-CRL/CRL/certs/falcon1024cacert.pem  -keyout /Path-to-Dirctory/PQ-CRL/CRL/private/falcon1024cakey.pem  -days 3650 -batch
 
 ./openssl x509 -noout -text -in /Path-to-Dirctory/PQ-CRL/CRL/certs/falcon1024cacert.pem
+
 
 - Go to Path-to-Dirctory/PQ-CRL/CRL/certs
 
@@ -159,7 +159,6 @@ Dilithium2
 
 - run 
 
-
 /Path-to-Dirctory/openssl/apps/openssl req -new -config /Path-to-Dirctory/openssl/apps/openssl.cnf -newkey dilithium2 -sha256  -out dil2svrcert.csr  -keyout dil2svrkey.pem -batch
 
 /Path-to-Dirctory/openssl/apps/openssl ca -config /Path-to-Dirctory/openssl/apps/openssl.cnf -notext -batch -in dil2svrcert.csr -out dil2server-1.crt -extfile ext_template.cnf
@@ -178,6 +177,7 @@ Dilithium3
 ./openssl req -x509 -config openssl.cnf -newkey dilithium3 -sha256 -out /Path-to-Dirctory/PQ-CRL/CRL/certs/dil3cacert.pem  -keyout /Path-to-Dirctory/PQ-CRL/CRL/private/dil3cakey.pem  -days 3650 -batch
 
 ./openssl x509 -noout -text -in /Path-to-Dirctory/PQ-CRL/CRL/certs/dil3cacert.pem
+
 
 - Go to Path-to-Dirctory/PQ-CRL/CRL/certs
 
@@ -202,6 +202,7 @@ Dilithium5
 
 ./openssl x509 -noout -text -in /Path-to-Dirctory/PQ-CRL/CRL/certs/dil5cacert.pem
 
+
 - Go to Path-to-Dirctory/PQ-CRL/CRL/certs
 
 - run 
@@ -224,6 +225,7 @@ sphincsharaka128fsimple
 ./openssl req -x509 -config openssl.cnf -newkey sphincsharaka128fsimple -sha256 -out /Path-to-Dirctory/PQ-CRL/CRL/certs/sphincsharakacacert.pem  -keyout /Path-to-Dirctory/PQ-CRL/CRL/private/sphincsharakacakey.pem  -days 3650 -batch
 
 ./openssl x509 -noout -text -in /Path-to-Dirctory/PQ-CRL/CRL/certs/sphincsharakacacert.pem
+
 
 - Go to Path-to-Dirctory/PQ-CRL/CRL/certs
 
@@ -250,6 +252,7 @@ sphincssha256128ssimple
 
 ./openssl x509 -noout -text -in /Path-to-Dirctory/PQ-CRL/CRL/certs/sphincshacacert.pem
 
+
 - Go to Path-to-Dirctory/PQ-CRL/CRL/certs
 
 - run 
@@ -272,6 +275,7 @@ sphincsshake256128fsimple
 ./openssl req -x509 -config openssl.cnf -newkey sphincsshake256128fsimple -sha256 -out /Path-to-Dirctory/PQ-CRL/CRL/certs/sphincshakecacert.pem  -keyout /Path-to-Dirctory/PQ-CRL/CRL/private/sphincshakecakey.pem  -days 3650 -batch
 
 ./openssl x509 -noout -text -in /Path-to-Dirctory/PQ-CRL/CRL/certs/sphincshakecacert.pem
+
 
 - Go to Path-to-Dirctory/PQ-CRL/CRL/certs
 
