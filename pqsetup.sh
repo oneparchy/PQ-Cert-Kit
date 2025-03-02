@@ -103,7 +103,7 @@ function prompt_installer {
 
     case $CHOICE in
         y|Y|yes|YES|"")
-            sudo apt-get install $1
+            sudo apt-get install -y $1
             ;;
         *)
             _info "Quitting..."
