@@ -9,7 +9,7 @@ import pyshark
 # Populate FILEPATHS with the path(s) to your pcap file(s).
 FILEPATHS = ["./capture.pcapng"]
 # Change CLT to your client IP address.
-CLT="192.168.146.134"
+CLT="x.x.x.x"
 
 #=========================================================================
 
