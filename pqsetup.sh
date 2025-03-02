@@ -13,6 +13,8 @@ BASE_DIR=$(pwd)
 ###############################################################################
 # The variables in this section MUST be set for proper execution of this script.
 
+#ABSOLUTE path to the directory to which LIBOQS should be installed:
+LIBOQS_DIR=$BASE_DIR/liboqs
 #ABSOLUTE path to the directory to which OQS openssl should be installed:
 OPENSSL_DIR=$BASE_DIR/openssl
 
@@ -75,7 +77,7 @@ function _fail {
 }
 
 # -----------------------------------------------------------------------------
-# Checking dependencies
+# Check dependencies
 # -----------------------------------------------------------------------------
 function check_dependencies {
     DEPS=("bc" "astyle" "cmake" "gcc" "ninja-build" "libssl-dev" "python3-pytest" "python3-pytest-xdist" "unzip" "xsltproc" "doxygen" "graphviz" "python3-yaml" "valgrind" "libtool" "make" "git" "software-properties-common" "build-essential" "moreutils")
@@ -92,6 +94,27 @@ function check_dependencies {
             _info "On Debian/Ubuntu: apt-get install '$d'"
             prompt_installer $d
         fi
+    done
+}
+
+# -----------------------------------------------------------------------------
+# Check Dirs
+# -----------------------------------------------------------------------------
+function check_dirs {
+    DIRS=("LIBOQS" "OPENSSL")
+    for d in ${DIRS[@]}; do
+        var_name="${d}_DIR"
+        _info "Install directory for $d set to ${!var_name}"
+        read -p "Confirm? [Y/n]: " -n 10 CHOICE
+        case $CHOICE in
+        y|Y|yes|YES|"")
+            _success "$d directory confirmed"
+            ;;
+        *)
+            _fail "ABORT"
+            exit 1
+            ;;
+        esac
     done
 }
 
@@ -139,13 +162,15 @@ else
     
     _info "Check dependencies"
     check_dependencies
+    _info "Check directories"
+    check_dirs
 
     _info "OQS OpenSSL target directory set to $BASE_DIR/openssl"
     git clone --branch OQS-OpenSSL_1_1_1-stable https://github.com/open-quantum-safe/openssl.git $OPENSSL_DIR
     
     _info "Install liboqs to '$BASE_DIR'/liboqs"
-    git clone --branch main https://github.com/open-quantum-safe/liboqs.git
-    cd liboqs
+    git clone --branch main https://github.com/open-quantum-safe/liboqs.git $LIBOQS_DIR
+    cd $LIBOQS_DIR
     mkdir build && cd build
     cmake -GNinja -DCMAKE_INSTALL_PREFIX=$OPENSSL_DIR/oqs .. 
     ninja
