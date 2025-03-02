@@ -23,7 +23,6 @@ Can be used to quickly create CA infrastructure & accompanying certificates for:
     - Dilithium2
     - Dilithium3
     - Dilithium5
-    - SPHINCS<sup>+</sup>-Haraka
     - SPHINCS<sup>+</sup>-SHA256
     - SPHINCS<sup>+</sup>-SHAKE256
     - Hybrid RSA + Falcon512
