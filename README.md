@@ -8,13 +8,13 @@ This tools in this repo can be used to:
 1. [pqsetup.sh](pqsetup.sh) <br>
 Can be used to install [LibOQS](https://github.com/open-quantum-safe/liboqs) and the accompanying [OpenSSL fork](https://github.com/open-quantum-safe/openssl), typically for research & testing with post-quantum cryptographic algorithms.
 2. [mkcerts.sh](mkcerts.sh) <br>
-Can be used to quickly create CA infrastructure & accompanying certificates:
+Can be used to quickly create CA infrastructure & accompanying certificates for:
     - Root CA
     - Intermediate CA
     - OCSP signing
     - TLS Server
     - TLS Client
-<br>For several different algorithms:
+<br><br>Using several different digital signature algorithms:
     - RSA
     - ECDSA
     - EdDSA
@@ -26,6 +26,17 @@ Can be used to quickly create CA infrastructure & accompanying certificates:
     - SPHINCS<sup>+</sup>-Haraka
     - SPHINCS<sup>+</sup>-SHA256
     - SPHINCS<sup>+</sup>-SHAKE256
+    - Hybrid RSA + Falcon512
+    - Hybrid RSA + Dilithium2
+    - Hybrid RSA + SPHINCS<sup>+</sup>-SHA256
+    - Hybrid RSA + SPHINCS<sup>+</sup>-SHAKE256
+    - Hybrid ECDSA + Falcon512
+    - Hybrid ECDSA + Falcon1024
+    - Hybrid ECDSA + Dilithium2
+    - Hybrid ECDSA + Dilithium3
+    - Hybrid ECDSA + Dilithium5
+    - Hybrid ECDSA + SPHINCS<sup>+</sup>-SHA256
+    - Hybrid ECDSA + SPHINCS<sup>+</sup>-SHAKE256
 3. [openssl.cnf](openssl.cnf) <br>
 Is the accompanying config file for proper execution of #2. You can modify as needed if necessary. Key sections are listed below: <pre>[RootCA]</pre> <pre>[InterCA]</pre> <pre>[v3_ca]</pre> <pre>[v3_ocsp]</pre> <pre>[v3_server]&ast;</pre>  <pre>[v3_client]&ast;</pre> 
 &ast; - It is particularly important to edit the *authorityInfoAccess* attribute under these sections, as this defines the OCSP URL for certs signed with these extensions.
