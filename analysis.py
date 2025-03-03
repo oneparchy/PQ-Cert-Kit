@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 """
-Uses TSHARK to calculate TCP session durations from a packet capture. 
+Uses PYSHARK to calculate TCP session durations from a packet capture. 
 Calculation is from initial SYN to the packet preceding session teardown.
-Intended use is with openssl s_client to calculate  TLS handshake duration
+Intended use is with openssl s_client to calculate TLS handshake duration
 """
 import pyshark
 
 # Populate FILEPATHS with the path(s) to your pcap file(s).
-FILEPATHS = ["./capture.pcapng"]
+# These files should only contain the TCP FINACK packets from the client to the server
+FILEPATHS = ["capture.pcapng"]
+
 # Change CLT to your client IP address.
 CLT="x.x.x.x"
 
