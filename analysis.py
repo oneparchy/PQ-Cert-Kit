@@ -5,23 +5,26 @@ Calculation is from initial SYN to the packet preceding session teardown.
 Intended use is with openssl s_client to calculate TLS handshake duration
 """
 import pyshark
+import os
 
-# Populate FILEPATHS with the path(s) to your pcap file(s).
-# These files should only contain the TCP FINACK packets from the client to the server
-FILEPATHS = ["capture.pcapng"]
+# Populate RESULTSDIR with the path to the folder containing your pcap file(s).
+# These files should only contain complete TCP sessions between the client & server.
+RESULTSDIR = ["capture.pcapng"]
 
-# Change CLT to your client IP address.
-CLT="x.x.x.x"
+# Change SVR to your server IP address.
+SVR="x.x.x.x"
 
 #=========================================================================
 
-for FILE in FILEPATHS:
-	cap = pyshark.FileCapture(FILE)
+FILES = [f for f in os.listdir(RESULTSDIR)]
+for FILE in FILES:
+	cap = pyshark.FileCapture(RESULTSDIR + "/" + FILE)
 	times = []
 
 	for p in cap:	
 		try:
-			if all([p.ip.src==CLT, p.ip.proto=='6', p.tcp.flags_fin=='1', p.tcp.flags_ack=='1']):
+			if all([p.ip.dst==SVR, p.ip.proto=='6', p.tcp.flags_fin=='1', p.tcp.flags_ack=='1']):
+#				print(p.tcp.time_relative, p.tcp.time_delta)
 				sess_start_ms = float(p.tcp.time_relative) * 1000
 				shake_end_ms_rel = float(p.tcp.time_delta) * 1000
 				duration_ms = sess_start_ms - shake_end_ms_rel
