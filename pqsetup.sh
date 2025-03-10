@@ -1,28 +1,24 @@
 #!/bin/bash
 
-# Script to:
-# 1. Install liboqs
-# 2. Install OQS openssl
+############################################### UPDATE ###############################################
+# The OQS guys have massively simplified this process from what we used to have to do before
+# Script has been adjusted to reflect that, however this script ASSUMES you already have a compatible
+# OpenSSL (>=3.0) in a system-standard location. If this is not the case, do not use this script - 
+# Manually install LibOQS & OQS-Provider yourself: https://github.com/open-quantum-safe/oqs-provider
+######################################################################################################
 
-# This script is written for Ubuntu OS only.
+# This script is written for Ubuntu/Debian OS only.
+# You may have issues trying to use with other distros.
+######################################################################################################
+# -------------------------------------------- Global Vars -------------------------------------------
+BASE_DIR=$(pwd)					#Starting directory
+OQSP_DIR=$BASE_DIR/oqs-provider			#OQS Provider install directory
+$OSSLCNF_FILE=/lib/ssl/openssl.cnf		#Path to OpenSSL config file
 
-BASE_DIR=$(pwd)
-
-###############################################################################
-################################## IMPORTANT ##################################
-###############################################################################
-# The variables in this section MUST be set for proper execution of this script.
-
-#ABSOLUTE path to the directory to which LIBOQS should be installed:
-LIBOQS_DIR=$BASE_DIR/liboqs
-#ABSOLUTE path to the directory to which OQS openssl should be installed:
-OPENSSL_DIR=$BASE_DIR/openssl
-
-###############################################################################
-
-# -----------------------------------------------------------------------------
+######################################################################################################
+# ----------------------------------------------------------------------------------------------------
 # logging helpers
-# -----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
 
 function _log {
     level=$1
@@ -76,11 +72,11 @@ function _fail {
     _log "fail" "$msg"
 }
 
-# -----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
 # Check dependencies
-# -----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
 function check_dependencies {
-    DEPS=("bc" "astyle" "cmake" "gcc" "ninja-build" "libssl-dev" "python3-pytest" "python3-pytest-xdist" "unzip" "xsltproc" "doxygen" "graphviz" "python3-yaml" "valgrind" "libtool" "make" "git" "software-properties-common" "build-essential" "moreutils")
+    DEPS=("astyle" "cmake" "gcc" "ninja-build" "libssl-dev" "python3-pytest" "python3-pytest-xdist" "unzip" "xsltproc" "doxygen" "graphviz" "python3-yaml" "valgrind" "libtool" "make" "git" "software-properties-common" "build-essential" "moreutils")
     for d in ${DEPS[@]}; do
         _info "Looking for '$d'"
         found=0
@@ -97,30 +93,9 @@ function check_dependencies {
     done
 }
 
-# -----------------------------------------------------------------------------
-# Check Dirs
-# -----------------------------------------------------------------------------
-function check_dirs {
-    DIRS=("LIBOQS" "OPENSSL")
-    for d in ${DIRS[@]}; do
-        var_name="${d}_DIR"
-        _info "Install directory for $d set to ${!var_name}"
-        read -p "Confirm? [Y/n]: " -n 10 CHOICE
-        case $CHOICE in
-        y|Y|yes|YES|"")
-            _success "$d directory confirmed"
-            ;;
-        *)
-            _fail "ABORT"
-            exit 1
-            ;;
-        esac
-    done
-}
-
-# -----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
 # Prompt installer
-# -----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
 function prompt_installer {
     read -p "Do you want to install it? [Y/n]: " -n 10 CHOICE
 
@@ -135,67 +110,53 @@ function prompt_installer {
     esac
 }
 
-# -----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
 # Main
-# -----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
 
-OS=$(cat /etc/os-release  | grep VERSION_ID | cut -d '"' -f2)
+################################ MEMORY CHECK ################################
+# Building liboqs is VERY memory intensive, may fail on VMs with < 16GB RAM.
+# I read somewhere that the below command helps, but had no success with it myself.
+# sysctl -w vm.overcommit_memory=2
 
-################################ VERSION CHECK ################################
-# Ubuntu Jammy uses OpenSSL >= 3.x.x , and at the time of making this script OpenSSL 1.x.x is not installable.
-# This may (or may not) be a problem. I haven't tried to install this in Jammy.
-# If you believe it can successfully be installed on your system, feel free to remove the below check & clean up the rest of the if statement.
+# The workaround is to (temporarily) provision at least 16GB of RAM to the VM, then run this script.
+# You can reduce the RAM afterwards when liboqs is built.
 
-if (( $(echo "$OS < 18.04" |bc -l) )) || (( $(echo "$OS < 21.04" |bc -l) )); then
-    _fail "You are running Ubuntu version $OS, which may not support openssl 1.1.1"
+_info "Check dependencies"
+check_dependencies
+
+_info "Installing OQS Provider to '$OQSP_DIR'"
+git clone --branch main https://github.com/open-quantum-safe/liboqs.git "$OQSP_DIR"
+cd "$OQSP_DIR" && ./scripts/fullbuild.sh
+./scripts/runtests.sh		# For whatever reason this always returns 1 on my system even though it seems to work just fine. Might be WIP
+#if [ $? -eq 0 ]; then
+#	_success "Provider install succeed"
+#else
+#	_fail "Provider install failed"
+#	exit 1
+#fi
+
+_info "Activating OQS Provider"
+if [ -f "/lib/ssl/openssl.cnf" ]; then
+	sudo sed -i '/^\[provider_sect\]$/ { N; /\ndefault = default_sect$/ a\
+	oqsprovider = oqsprovider_sect
+	}' "$OSSLCNF_FILE" &&
+	sudo sed -i "/^\[default_sect\]$/ { N; /\n# activate = 1$/ {s/# activate = 1/activate = 1/; a\
+	[oqsprovider_sect]\
+	module = ${OQSP_DIR}/_build/lib/oqsprovider.so\
+	activate = 1
+	}}" "$OSSLCNF_FILE" &&
+ 	_success "Activated OQS Provider" 	
 else
+	_warn "Unable to activate OQS Provider"
+ fi
 
-
-    ################################ MEMORY CHECK ################################
-    # Building liboqs is VERY memory intensive, will likely fail on VMs with < 16GB RAM.
-    # I read somewhere that this command helps, but had no success with it myself.
-    
-    # sysctl -w vm.overcommit_memory=2
-    
-    # The workaround is to (temporarily) provision at least 16GB of RAM to the VM, then run this script.
-    # You can reduce the RAM afterwards when liboqs is built.
-    
-    _info "Check dependencies"
-    check_dependencies
-    _info "Check directories"
-    check_dirs
-
-    _info "OQS OpenSSL target directory set to $BASE_DIR/openssl"
-    git clone --branch OQS-OpenSSL_1_1_1-stable https://github.com/open-quantum-safe/openssl.git $OPENSSL_DIR
-    
-    _info "Install liboqs to '$BASE_DIR'/liboqs"
-    git clone --branch main https://github.com/open-quantum-safe/liboqs.git $LIBOQS_DIR
-    cd $LIBOQS_DIR
-    mkdir build && cd build
-    cmake -GNinja -DCMAKE_INSTALL_PREFIX=$OPENSSL_DIR/oqs .. 
-    ninja
-    ninja install
-    if [ $? -eq 0 ]; then
-        ninja clean
-        _success "Success"
-    else
-        ninja clean
-        _fail "Failed"
+if [ $? -eq 0 ]; then
+	_success "Done"
+else
+	_fail "Failed"
 	exit 1
-    fi
-    
-    _info "Install OQS OpenSSL to $BASE_DIR/openssl"
-    cd $OPENSSL_DIR 
-    ./Configure no-shared linux-x86_64 -lm
-    make -j
-    if [ $? -eq 0 ]; then
-        _success "Success"
-    else
-        make clean
-        _fail "Failed"
-	exit 1
-    fi
-
-    cd $BASE_DIR
-    exit 0
 fi
+
+cd $BASE_DIR
+exit 0
