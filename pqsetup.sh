@@ -126,7 +126,7 @@ _info "Check dependencies"
 check_dependencies
 
 _info "Installing OQS Provider to '$OQSP_DIR'"
-git clone --branch main https://github.com/open-quantum-safe/liboqs.git "$OQSP_DIR"
+git clone --branch main https://github.com/open-quantum-safe/oqs-provider.git "$OQSP_DIR"
 cd "$OQSP_DIR" && ./scripts/fullbuild.sh
 ./scripts/runtests.sh		# For whatever reason this always returns 1 on my system even though it seems to work just fine. Might be WIP
 #if [ $? -eq 0 ]; then
