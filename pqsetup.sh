@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# This script installs the OQS Provider (and dependencies), and is written for Ubuntu/Debian OS only.
+# You may have issues trying to use with other distros.
+# This script will attempt to install AND activate oqs provider, however it is best to manually verify correct activation.
+# See https://github.com/open-quantum-safe/oqs-provider/blob/main/USAGE.md#activation for activation details.
+# After running this script, verify proper functionality of your system-wide OpenSSL with:
+# 	openssl list -providers
+
 ############################################### UPDATE ###############################################
 # The OQS guys have massively simplified this process from what we used to have to do before
 # Script has been adjusted to reflect that, however this script ASSUMES you already have a compatible
@@ -7,8 +14,6 @@
 # Manually install LibOQS & OQS-Provider yourself: https://github.com/open-quantum-safe/oqs-provider
 ######################################################################################################
 
-# This script is written for Ubuntu/Debian OS only.
-# You may have issues trying to use with other distros.
 ######################################################################################################
 # -------------------------------------------- Global Vars -------------------------------------------
 BASE_DIR=$(pwd)					#Starting directory
@@ -139,13 +144,13 @@ cd "$OQSP_DIR" && ./scripts/fullbuild.sh
 _info "Activating OQS Provider"
 if [ -f "/lib/ssl/openssl.cnf" ]; then
 	sudo sed -i '/^\[provider_sect\]$/ { N; /\ndefault = default_sect$/ a\
-	oqsprovider = oqsprovider_sect
-	}' "$OSSLCNF_FILE" &&
+oqsprovider = oqsprovider_sect
+}' "$OSSLCNF_FILE" &&
 	sudo sed -i "/^\[default_sect\]$/ { N; /\n# activate = 1$/ {s/# activate = 1/activate = 1/; a\
-	[oqsprovider_sect]\
-	module = ${OQSP_DIR}/_build/lib/oqsprovider.so\
-	activate = 1
-	}}" "$OSSLCNF_FILE" &&
+[oqsprovider_sect]\
+module = ${OQSP_DIR}/_build/lib/oqsprovider.so\
+activate = 1
+}}" "$OSSLCNF_FILE" &&
  	_success "Activated OQS Provider" 	
 else
 	_warn "Unable to activate OQS Provider"
