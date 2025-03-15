@@ -17,9 +17,9 @@ Can be used to quickly create CA infrastructure & accompanying certificates for:
     - TLS Client
 <br><br>Using several different digital signature algorithms as listed in ALGS at the top of the script. For a list of available algorithms, refer [here](https://github.com/open-quantum-safe/oqs-provider?tab=readme-ov-file#signature-algorithms)
 4. [openssl.cnf](openssl.cnf) <br>
-Is the accompanying config file for proper execution of #2. You can modify as needed if necessary. Key sections are listed below: <pre>[oqs_provider_sect]</pre> <pre>[RootCA]</pre> <pre>[InterCA]</pre> <pre>[v3_ca]</pre> <pre>[v3_ocsp]</pre> <pre>[v3_server]&ast;</pre>  <pre>[v3_client]&ast;</pre> 
+Is the accompanying config file for proper execution of #2. You can modify as needed if necessary. Key sections are listed below: <pre>[oqs_provider_sect]&dagger;</pre> <pre>[RootCA]</pre> <pre>[InterCA]</pre> <pre>[v3_ca]</pre> <pre>[v3_ocsp]</pre> <pre>[v3_server]&ast;</pre>  <pre>[v3_client]&ast;</pre> 
 &dagger; - The **module** will need to point to the location of the oqs-provider library on your machine. This will need typically be nested under the oqsprovider install directory at &lt;oqs provider install directory&gt;/_build/lib/oqsprovider.so
-&ast; - It is particularly important to edit the *authorityInfoAccess* attribute under these sections, as this defines the endpoint for OCSP verification.
+<br>&ast; - It is particularly important to edit the *authorityInfoAccess* attribute under these sections, as this defines the endpoint for OCSP verification.
 
 
 ## Requirements
