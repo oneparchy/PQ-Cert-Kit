@@ -22,6 +22,12 @@ ALGS=("rsa" "ecdsa" "eddsa" "falcon512" "falcon1024" "mldsa44" "mldsa65" "mldsa8
 
 BASE_DIR=$(pwd)
 
+# Option to generate specific algs only
+if [ -n "$1" ]; then
+  unset ALGS
+  ALGS=("$@")
+fi
+
 #--------------------------- CERTIFICATE SUBJECT DN ---------------------------
 declare -A subject
 declare -A CN
