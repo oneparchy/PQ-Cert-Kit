@@ -2,9 +2,9 @@
 
 # This script installs the OQS Provider (and dependencies), and is written for Ubuntu/Debian OS only.
 # You may have issues trying to use with other distros.
-# This script will attempt to install AND activate oqs provider, however it is best to manually verify correct activation.
+# This script will attempt to install OQS Provider, however it is best to activate manually. 
 # See https://github.com/open-quantum-safe/oqs-provider/blob/main/USAGE.md#activation for activation details.
-# After running this script, verify proper functionality of your system-wide OpenSSL with:
+# Verify proper functionality of your system-wide OpenSSL with:
 # 	openssl list -providers
 
 ############################################### UPDATE ###############################################
@@ -19,6 +19,7 @@
 BASE_DIR=$(pwd)					#Starting directory
 OQSP_DIR=$BASE_DIR/oqs-provider			#OQS Provider install directory
 $OSSLCNF_FILE=/lib/ssl/openssl.cnf		#Path to OpenSSL config file
+ALGS_ENABLED="All"				#OQS Algorithms enabled (see https://github.com/open-quantum-safe/liboqs/blob/main/CONFIGURE.md#oqs_algs_enabled:~:text=Default%3A%20Unset.-,OQS_ALGS_ENABLED,-A%20selected%20algorithm)
 
 ######################################################################################################
 # ----------------------------------------------------------------------------------------------------
@@ -132,7 +133,7 @@ check_dependencies
 
 _info "Installing OQS Provider to '$OQSP_DIR'"
 git clone --branch main https://github.com/open-quantum-safe/oqs-provider.git "$OQSP_DIR"
-cd "$OQSP_DIR" && ./scripts/fullbuild.sh
+cd "$OQSP_DIR" && env CMAKE_PARAMS="-DOQS_ALGS_ENABLED=$ALGS_ENABLED" bash scripts/fullbuild.sh
 ./scripts/runtests.sh		# For whatever reason this always returns 1 on my system even though it seems to work just fine. Might be WIP
 #if [ $? -eq 0 ]; then
 #	_success "Provider install succeed"
@@ -141,23 +142,24 @@ cd "$OQSP_DIR" && ./scripts/fullbuild.sh
 #	exit 1
 #fi
 
-_info "Activating OQS Provider"
-if [ -f "/lib/ssl/openssl.cnf" ]; then
-	sudo sed -i '/^\[provider_sect\]$/ { N; /\ndefault = default_sect$/ a\
-oqsprovider = oqsprovider_sect
-}' "$OSSLCNF_FILE" &&
-	sudo sed -i "/^\[default_sect\]$/ { N; /\n# activate = 1$/ {s/# activate = 1/activate = 1/; a\
-[oqsprovider_sect]\
-module = ${OQSP_DIR}/_build/lib/oqsprovider.so\
-activate = 1
-}}" "$OSSLCNF_FILE" &&
- 	_success "Activated OQS Provider" 	
-else
-	_warn "Unable to activate OQS Provider"
- fi
+#_info "Activating OQS Provider"
+#if [ -f "/lib/ssl/openssl.cnf" ]; then
+#	sudo sed -i '/^\[provider_sect\]$/ { N; /\ndefault = default_sect$/ a\
+#oqsprovider = oqsprovider_sect
+#}' "$OSSLCNF_FILE" &&
+#	sudo sed -i "/^\[default_sect\]$/ { N; /\n# activate = 1$/ {s/# activate = 1/activate = 1/; a\
+#[oqsprovider_sect]\
+#module = ${OQSP_DIR}/_build/lib/oqsprovider.so\
+#activate = 1
+#}}" "$OSSLCNF_FILE" &&
+# 	_success "Activated OQS Provider" 	
+#else
+#	_warn "Unable to activate OQS Provider"
+#fi
 
 if [ $? -eq 0 ]; then
-	_success "Done"
+	_warn "OQS Provider installed but not activated. Activate manually"
+ 	_success "Done"
 else
 	_fail "Failed"
 	exit 1
