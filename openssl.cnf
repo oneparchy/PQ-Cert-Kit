@@ -70,7 +70,7 @@ oqsprovider = oqsprovider_sect
 [default_sect]
 activate = 1
 [oqsprovider_sect]
-module = /home/pquser/oqs-provider/_build/lib/oqsprovider.so
+module = /home/pquser/oqs-provider/_build/lib/oqsprovider.so		# <---- THIS MUST POINT TO THE OQS PROVIDER LIBRARY ON YOUR MACHINE
 activate = 1
 
 ####################################################################
@@ -332,7 +332,7 @@ authorityKeyIdentifier  = keyid:always, issuer:always
 keyUsage                = critical, cRLSign, keyCertSign
 #extendedKeyUsage        = timeStamping
 # ---------------EDIT BELOW WITH YOUR DESIRED OCSP SERVER URL, OR COMMENT OUT TO REMOVE OCSP AUTHORITY INFO
-authorityInfoAccess    = OCSP;URI:http://ocsp:8080
+#authorityInfoAccess    = OCSP;URI:http://ocsp:8080
 
 
 [ v3_rca ]
