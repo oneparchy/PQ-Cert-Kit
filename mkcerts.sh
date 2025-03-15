@@ -12,13 +12,15 @@
 
 # You may also need to edit the openssl.cnf file included in this repo to set
 # the OCSP URL. Look for the lines that say:
-# 	---------------EDIT BELOW WITH YOUR DESIRED OCSP SERVER URL
-# 	authorityInfoAccess    = OCSP;URI:http://ocsp:8080	
-# under the relevant x509 extension headers section. 
+#       ---------------EDIT BELOW WITH YOUR DESIRED OCSP SERVER URL
+#       authorityInfoAccess    = OCSP;URI:http://ocsp:8080
+# under the relevant x509 extension headers section.
 
 #Algorithms to generate certs with:
-ALGS=("rsa" "ecdsa" "eddsa" "falcon512" "falcon1024" "mldsa44" "mldsa65" "mldsa87" "sphincssha2128fsimple" "sphincssha2128ssimple" "sphincsshake128fsimple" "rsa3072_falcon512" "p256_falcon512" "p521_falcon1024" "rsa3072_mldsa44" "p256_mldsa44" "p384_mldsa65" "p521_mldsa87" "rsa3072_sphincssha2128fsimple" "p256_sphincssha2128fsimple" "rsa3072_sphincssha2128ssimple" "p256_sphincssha2128ssimple" "rsa3072_sphincsshake128fsimple" "p256_sphincsshake128fsimple")
-# rsa, ecdsa, & eddsa are specially coded below - for PQ algorithms, make sure the name matches exactly with what is listed by liboqs, and it should work if LibOQS has been built with those algorithms included
+ALGS=("rsa" "ecdsa" "eddsa")
+QALGS=$(openssl list -signature-algorithms | grep oqs| awk '{print $1}')
+ALGS+=($QALGS)
+# rsa, ecdsa, & eddsa are specially coded below - for PQ algorithms, make sure the name matches exactly with what is listed by liboqs, and it >
 
 BASE_DIR=$(pwd)
 
@@ -27,7 +29,6 @@ if [ -n "$1" ]; then
   unset ALGS
   ALGS=("$@")
 fi
-
 #--------------------------- CERTIFICATE SUBJECT DN ---------------------------
 declare -A subject
 declare -A CN
