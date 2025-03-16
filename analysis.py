@@ -9,7 +9,7 @@ import os
 
 # Populate RESULTSDIR with the path to the folder containing your pcap file(s).
 # These files should only contain complete TCP sessions between the client & server.
-RESULTSDIR = ["capture.pcapng"]
+RESULTSDIR = "./results"
 
 # Change SVR to your server IP address.
 SVR="x.x.x.x"
@@ -33,7 +33,8 @@ for FILE in FILES:
 		except AttributeError: continue;	#Ignore traffic that doesn't fit the profile
 
 	cap.close()
-	print("File: ",FILE)
 	print("------------------------------")
+	print("File: ",FILE)
 	print("Number of streams: ", len(times))
 	print("Average handshake duration: ", round(sum(times) / len(times) if times else 0,2), "ms")
+	print("------------------------------")
